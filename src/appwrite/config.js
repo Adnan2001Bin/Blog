@@ -1,5 +1,5 @@
-import conf from "../conf/conf";
-import { Client, Databases, Storage, ID, Query } from "appwrite";
+import conf from "../conf/conf.js";
+import { Client, ID, Databases, Storage, Query } from "appwrite";
 
 export class Service {
   client = new Client();
@@ -10,14 +10,13 @@ export class Service {
     this.client
       .setEndpoint(conf.appwriteUrl)
       .setProject(conf.appwriteProjectId);
-
     this.databases = new Databases(this.client);
     this.bucket = new Storage(this.client);
   }
 
   async createPost({ title, slug, content, featuredImage, status, userId }) {
     try {
-      await this.databases.createDocument(
+      return await this.databases.createDocument(
         conf.appwriteDatabaseId,
         conf.appwriteCollectioId,
         slug,
@@ -102,7 +101,7 @@ export class Service {
         file
       );
     } catch (error) {
-      console.log("Appwrite serive :: deleteFile :: error", error);
+      console.log("Appwrite serive :: uploadFile :: error", error);
       return false;
     }
   }
@@ -123,5 +122,4 @@ export class Service {
 }
 
 const service = new Service();
-
 export default service;
